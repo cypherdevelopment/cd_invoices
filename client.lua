@@ -14,14 +14,11 @@ RegisterCommand(Config.commandName, function()
         })
         tabOpen = false 
         SetNuiFocus(false, false)
+    end
 end)
 
--- Keymapping -- 
-RegisterKeyMapping(Config.commandName, "Open Tablet", "keyboard", "F5")
-
-
 -- NUI Callbacks --
-RegisterNUICallback('cd_businesstab:closebtn', function(_, cb) {
+RegisterNUICallback('cd_businesstab:closebtn', function(_, cb) 
     cb({})
     SetNuiFocus(false, false)
-})
+end)
