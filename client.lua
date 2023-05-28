@@ -2,6 +2,12 @@ local tabOpen = false
 
 -- Command to Open -- 
 RegisterCommand(Config.commandName, function()
+    TriggerEvent('cd_businesstab:usetablet')
+end)
+
+-- UI Event -- 
+RegisterNetEvent('cd_businesstab:usetablet')
+AddEventHandler('cd_businesstab:usetablet', function()
     if not tabOpen then 
         SendNUIMessage({
             type = "opentablet"
