@@ -1,20 +1,29 @@
-$(function () {
-    // Hide Tablet 
-    $(".tablet").hide();
+// Get Values from Tablet
+let customername = document.getElementById("customername");
+let customerid = document.getElementById("customerid");
+let invoicedesc = document.getElementById("invoicedesc");
+let invoiceamt = document.getElementById("invoiceamt");
 
-    window.addEventListener('message', function(event) {
-        // Assign Data 
-        let data = event.data;
+// $(function () {
+//   // Hide Tablet
+//   $(".tablet").hide();
 
-        // Open UI
-        if (data.type === "opentablet") {
-            $('.tablet').show();
-        }
+//   window.addEventListener("message", function (event) {
+//     // Assign Data
+//     let data = event.data;
 
-        // Close UI 
-        if (data.type === "closetablet") {
-            $('.tablet').hide();
-        }
+//     // Open UI
+//     if (data.type === "opentablet") {
+//       $(".tablet").show();
+//     }
 
-    })
-})
+//     // Close UI
+//     if (data.type === "closetablet") {
+//       $(".tablet").hide();
+//     }
+//   });
+// });
+
+document.getElementById("sbmtbtn").addEventListener("click", () => {
+  console.log(customerid, customername, invoiceamt, invoiceamt);
+});
