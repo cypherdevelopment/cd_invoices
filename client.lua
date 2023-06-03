@@ -1,24 +1,19 @@
-local tabOpen = false 
-
--- Command to Open -- 
-RegisterCommand(Config.commandName, function()
-    if not tabOpen then 
-        SendNUIMessage({
-            type = "opentablet"
-        })
-        tabOpen = true 
-        SetNuiFocus(true, true)
-    else 
-        SendNUIMessage({
-            type = "closetablet"
-        })
-        tabOpen = false 
-        SetNuiFocus(false, false)
-    end
+RegisterNetEvent('openinvoice')
+AddEventHandler('openinvoice', function()
+    SendNUIMessage({
+        type = "createinvoice"
+    })
+    SetNuiFocus(false, false)
 end)
 
--- NUI Callbacks --
-RegisterNUICallback('cd_businesstab:closebtn', function(_, cb) 
+RegisterCommand("openui", function()
+    TriggerEvent('openinvoice')
+    SetNuiFocus(true,true)
+end)
+
+RegisterNuiCallback('closeinvoice', function(_, cb)
     cb({})
     SetNuiFocus(false, false)
 end)
+
+RegisterKeyMapping('openui', "test", 'keyboard', 'F5')

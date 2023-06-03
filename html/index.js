@@ -1,20 +1,16 @@
-$(function () {
-    // Hide Tablet 
-    $(".tablet").hide();
+$('.container').hide();
 
+$(function() {
     window.addEventListener('message', function(event) {
-        // Assign Data 
-        let data = event.data;
+        let data = event.data; 
 
-        // Open UI
-        if (data.type === "opentablet") {
-            $('.tablet').show();
+        if (data.type === "createinvoice") {
+            $(".container").show();
         }
-
-        // Close UI 
-        if (data.type === "closetablet") {
-            $('.tablet').hide();
-        }
-
     })
+})
+
+document.getElementById('createbtn').addEventListener('click', () => {
+    $('.container').hide();
+    axios.post(`https://${GetParentResourceName()}/closeinvoice`, {})
 })

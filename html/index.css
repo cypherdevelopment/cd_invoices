@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@600&display=swap');
+
+* {
+    font-family: 'Open Sans', sans-serif;
+}
+
+.container {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    height: 600px;
+    margin-top: -300px;
+    margin-left: -150px;
+}
+
+.invoice {
+    display: block;
+    background-color: #4D5656;
+    color: white;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.invoice h1 {
+    height: 20px;
+    line-height: 40px;
+}
+
+input[type=text], input[type=number] {
+    margin: 5px;
+    padding: 7px 14px;
+    background-color: #424949;
+    border: 2px solid #4D5656;
+    border-radius: 5px;
+}
+
+.btncls {
+    display: flex;
+    justify-content: center;
+}
+
+#createbtn {
+    display: block;
+    text-align: center;
+    margin: 10px 10px;
+    padding: 8px 16px;
+    background-color: #2ECC71;
+    border: none;
+    border-radius: 6px;
+}
+
+#createbtn:hover {
+    background-color: #58D68D;
+}
