@@ -20,14 +20,15 @@ document.getElementById('createbtn').addEventListener('click', () => {
     let title = document.getElementById('invoicetitle').value
 
     // Checking 
-    if (!amount || !playerid || !title) axios.post(`https://${GetParentResourceName()}/closeui`, {}); return;
-
-    // Submit Invoice 
-    axios.post(`https://${GetParentResourceName()}/submitinvoice`, {
-        playerid,
-        amount,
-        title
-    })
+    if (!amount || !playerid || !title) {
+        axios.post(`https://${GetParentResourceName()}/closeui`, {})
+    } else {
+        axios.post(`https://${GetParentResourceName()}/submitinvoice`, {
+            playerid,
+            amount,
+            title
+        })
+    }
 
     document.getElementById('invoiceform').reset();
 })
