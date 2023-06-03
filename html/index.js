@@ -11,6 +11,23 @@ $(function() {
 })
 
 document.getElementById('createbtn').addEventListener('click', () => {
+    // Hide UI 
     $('.container').hide();
-    axios.post(`https://${GetParentResourceName()}/closeinvoice`, {})
+
+    // Get Field Value 
+    let amount = document.getElementById('invoiceamount').value 
+    let playerid = document.getElementById('playerid').value
+    let title = document.getElementById('invoicetitle').value
+
+    // Checking 
+    if (!amount || !playerid || !title) axios.post(`https://${GetParentResourceName()}/closeui`, {}); return;
+
+    // Submit Invoice 
+    axios.post(`https://${GetParentResourceName()}/submitinvoice`, {
+        playerid,
+        amount,
+        title
+    })
+
+    document.getElementById('invoiceform').reset();
 })
