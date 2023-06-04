@@ -1,5 +1,8 @@
 local invoices = {}
 local QBCore = exports['qb-core']:GetCoreObject();
+local RandNum = math.random(0, 5000) * 5
+local RandLetter = string.char(math.random(65, 65 + 25))
+local InvoiceNumber = RandLetter..RandNum
 
 -- NUI Events -- 
 RegisterNetEvent('openinvoice')
@@ -21,7 +24,7 @@ RegisterNuiCallback('submitinvoice', function(data, cb)
     SetNuiFocus(false, false)
     QBCore.Functions.Notify('Invoice Submitted!', 'success', 5000)
     table.insert(invoices, data)
-    TriggerServerEvent('cd_businesstab:createinvoice', data.playerid, data.title, data.amount)
+    TriggerServerEvent('cd_businesstab:createinvoice', data.playerid, data.title, data.amount, InvoiceNumber)
 end)
 
 -- QB-Target -- 
