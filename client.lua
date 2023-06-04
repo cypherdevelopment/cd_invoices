@@ -21,6 +21,7 @@ RegisterNuiCallback('submitinvoice', function(data, cb)
     SetNuiFocus(false, false)
     QBCore.Functions.Notify('Invoice Submitted!', 'success', 5000)
     table.insert(invoices, data)
+    TriggerServerEvent('cd_businesstab:createinvoice', data.playerid, data.title, data.amount)
 end)
 
 -- QB-Target -- 
@@ -55,19 +56,29 @@ function InvoiceMenu()
         header = 'Invoice Menu',
         icon = 'fa-solid fa-envelope'
     }
-    for k,v in pairs(invoices) do 
+        for k,v in pairs(invoices) do 
         invoiceList[#invoiceList + 1] = {
         header = "Invoice "..k.. ": " .. v.title,
         txt = "$"..v.amount,
         icon = 'fa-solid fa-money',
         params = {
-            event = 'openinvoice'
+            event = 'cd_businesstab:client:payinvoice',
+            args = {
+                amount = v.amount, 
+                title = k,
+            }
         }
     }
     end
     exports['qb-menu']:openMenu(invoiceList)
 end
 
+-- Events -- 
+RegisterNetEvent('cd_businesstab:client:payinvoice', function(data)
+    TriggerServerEvent('cd_businesstab:payinvoice', data.amount, data.title)
+ end)
+
+-- Create Invoice -- 
 RegisterCommand("openm", function()
     InvoiceMenu()
 end)
