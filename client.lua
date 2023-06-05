@@ -13,6 +13,10 @@ AddEventHandler('openinvoice', function()
     SetNuiFocus(true, true)
 end)
 
+RegisterCommand('openinvoice',function()
+TriggerEvent('openinvoice')
+end,false)
+
 RegisterNuiCallback('closeui', function(_, cb)
     cb({})
     SetNuiFocus(false, false)
@@ -23,7 +27,6 @@ RegisterNuiCallback('submitinvoice', function(data, cb)
     cb({})
     SetNuiFocus(false, false)
     QBCore.Functions.Notify('Invoice Submitted!', 'success', 5000)
-    table.insert(invoices, data)
     TriggerServerEvent('cd_businesstab:createinvoice', data.playerid, data.title, data.amount, InvoiceNumber)
 end)
 
@@ -51,9 +54,21 @@ CreateThread(function()
     })
 end)
 
+
+
 -- QB-Menu--
 function InvoiceMenu()
     local invoiceList = {}
+    invoices = nil
+    QBCore.Functions.TriggerCallback('cd_ganglands::getInvoices',function(returnValue)
+        invoices = {}
+        for k,v in pairs(returnValue) do 
+            table.insert(invoices,v)
+        end
+    end,Datasend)
+    while invoices == nil do 
+        Citizen.Wait(200)
+    end
     invoiceList[#invoiceList+1] = {
         isMenuHeader = true,
         header = 'Invoice Menu',
@@ -68,7 +83,7 @@ function InvoiceMenu()
             event = 'cd_businesstab:client:payinvoice',
             args = {
                 amount = v.amount, 
-                title = k,
+                invoiceno = v.invoiceno,
             }
         }
     }
@@ -78,7 +93,8 @@ end
 
 -- Events -- 
 RegisterNetEvent('cd_businesstab:client:payinvoice', function(data)
-    TriggerServerEvent('cd_businesstab:payinvoice', data.amount, data.title)
+    TriggerServerEvent('cd_businesstab:payinvoice', data.amount, data.invoiceno)
+    
  end)
 
 -- Create Invoice -- 
