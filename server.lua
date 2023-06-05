@@ -1,10 +1,11 @@
 QBCore = exports['qb-core']:GetCoreObject()
 
 -- Events -- 
-RegisterServerEvent('cd_businesstab:createinvoice')
-AddEventHandler('cd_businesstab:createinvoice', function(id, title, amount, InvoiceNumber)
+RegisterServerEvent('cd_invoicesystem:createinvoice')
+AddEventHandler('cd_invoicesystem:createinvoice', function(id, title, amount, InvoiceNumber)
     local src = QBCore.Functions.GetPlayer(tonumber(id))
     local playerid = src.PlayerData.citizenid
+
     MySQL.insert(
        'INSERT INTO invoices (title, amount, playerid, invoiceno) VALUES (@title, @amount, @playerid, @invoiceno);',
        {
@@ -18,8 +19,8 @@ AddEventHandler('cd_businesstab:createinvoice', function(id, title, amount, Invo
        TriggerClientEvent('QBCore:Notify', id, 'You have been invoiced: $' .. amount)
 end)
 
-RegisterServerEvent('cd_businesstab:payinvoice')
-AddEventHandler('cd_businesstab:payinvoice', function(amount, invoiceno)
+RegisterServerEvent('cd_invoicesystem:payinvoice')
+AddEventHandler('cd_invoicesystem:payinvoice', function(amount, invoiceno)
     local src = source 
     local Player = QBCore.Functions.GetPlayer(src)
     local playerid = Player.PlayerData.citizenid
@@ -38,7 +39,7 @@ end)
 -- SQL Queries -- 
 
 -- CallBacks -- 
-QBCore.Functions.CreateCallback('cd_ganglands::getInvoices',function(source,cb,args)
+QBCore.Functions.CreateCallback('cd_invoicesystem:getinvoice',function(source,cb,args)
     local src = source 
     local Player = QBCore.Functions.GetPlayer(src)
     local playerid = Player.PlayerData.citizenid

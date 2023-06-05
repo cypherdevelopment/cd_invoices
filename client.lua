@@ -1,8 +1,14 @@
 local invoices = {}
 local QBCore = exports['qb-core']:GetCoreObject();
-local RandNum = math.random(0, 5000) * 5
-local RandLetter = string.char(math.random(65, 65 + 25))
-local InvoiceNumber = RandLetter..RandNum
+
+CreateThread(function()
+    while true do 
+    Wait(100)
+    local RandNum = math.random(0, 5000) * 5
+    local RandLetter = string.char(math.random(65, 65 + 25))
+    InvoiceNumber = RandLetter..RandNum
+    end
+end)
 
 -- NUI Events -- 
 RegisterNetEvent('openinvoice')
@@ -12,10 +18,6 @@ AddEventHandler('openinvoice', function()
     })
     SetNuiFocus(true, true)
 end)
-
-RegisterCommand('openinvoice',function()
-TriggerEvent('openinvoice')
-end,false)
 
 RegisterNuiCallback('closeui', function(_, cb)
     cb({})
@@ -27,40 +29,28 @@ RegisterNuiCallback('submitinvoice', function(data, cb)
     cb({})
     SetNuiFocus(false, false)
     QBCore.Functions.Notify('Invoice Submitted!', 'success', 5000)
-    TriggerServerEvent('cd_businesstab:createinvoice', data.playerid, data.title, data.amount, InvoiceNumber)
+    TriggerServerEvent('cd_invoicesystem:createinvoice', data.playerid, data.title, data.amount, InvoiceNumber)
 end)
 
--- QB-Target -- 
-CreateThread(function()
-    model = "a_m_m_indian_01"
-    RequestModel(model)
-
-    while not HasModelLoaded(model) do 
-        Wait(1)
-    end 
-
-    aiped = CreatePed(0, model, -247.77, 289.58, 91.99, 92.48, true, false)
-
-    exports['qb-target']:AddTargetEntity(aiped, {
-        options = {
-            {
-                type = "client",
-                event = "openinvoice",
-                label = 'Create Invoice',
-                icon = "fas fa-envelope",
-            }
-        },
-        distance = 2.5, 
-    })
-end)
+-- Targeting -- 
+exports['qb-target']:AddGlobalPlayer({
+    options = {
+        {
+            type = "client",
+            event = "openinvoice",
+            icon = "fas fa-envelope",
+            label = 'Create Invoice'
+        }
+    },
+    distance = 2.5, -- This is the distance for you to be at for the target to turn blue, this is in GTA units and has to be a float value
+  })
 
 
-
--- QB-Menu--
-function InvoiceMenu()
+-- Invoice Menu --
+RegisterCommand("menu", function()
     local invoiceList = {}
     invoices = nil
-    QBCore.Functions.TriggerCallback('cd_ganglands::getInvoices',function(returnValue)
+    QBCore.Functions.TriggerCallback('cd_invoicesystem:getinvoice',function(returnValue)
         invoices = {}
         for k,v in pairs(returnValue) do 
             table.insert(invoices,v)
@@ -80,7 +70,7 @@ function InvoiceMenu()
         txt = "$"..v.amount,
         icon = 'fa-solid fa-money',
         params = {
-            event = 'cd_businesstab:client:payinvoice',
+            event = 'cd_invoicesystem:client:payinvoice',
             args = {
                 amount = v.amount, 
                 invoiceno = v.invoiceno,
@@ -89,15 +79,12 @@ function InvoiceMenu()
     }
     end
     exports['qb-menu']:openMenu(invoiceList)
-end
+end)
+
+RegisterKeyMapping("menu", "Open the Invoice Menu", "keyboard", "F6")
 
 -- Events -- 
-RegisterNetEvent('cd_businesstab:client:payinvoice', function(data)
-    TriggerServerEvent('cd_businesstab:payinvoice', data.amount, data.invoiceno)
-    
+RegisterNetEvent('cd_invoicesystem:client:payinvoice', function(data)
+    TriggerServerEvent('cd_invoicesystem:payinvoice', data.amount, data.invoiceno)
  end)
 
--- Create Invoice -- 
-RegisterCommand("openm", function()
-    InvoiceMenu()
-end)
