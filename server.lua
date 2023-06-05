@@ -15,7 +15,6 @@ AddEventHandler('cd_businesstab:createinvoice', function(id, title, amount, Invo
        },
        function(result)
        end)
-       print(InvoiceNumber)
        TriggerClientEvent('QBCore:Notify', id, 'You have been invoiced: $' .. amount)
 end)
 
