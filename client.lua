@@ -10,6 +10,26 @@ CreateThread(function()
     end
 end)
 
+-- Functions -- 
+function GetNearPed()
+	local plyPed = GetPlayerPed(PlayerPedId())
+	local plyPos = GetEntityCoords(plyPed, false)
+	local plyOffset = GetOffsetFromEntityInWorldCoords(plyPed, 0.0, 1.3, 0.0)
+	local rayHandle = StartShapeTestCapsule(plyPos.x, plyPos.y, plyPos.z, plyOffset.x, plyOffset.y, plyOffset.z, 1.0, 12, plyPed, 7)
+	local _, _, _, _, ped = GetShapeTestResult(rayHandle)
+	return ped
+end
+
+function GetPedID()
+    local ped = GetNearPed()
+    playerid = GetPlayerServerId(ped)
+    SendNUIMessage({
+        type = "updateplayerid",
+        id = playerid
+    })
+end
+
+
 -- NUI Events -- 
 RegisterNetEvent('openinvoice')
 AddEventHandler('openinvoice', function()
@@ -29,7 +49,7 @@ RegisterNuiCallback('submitinvoice', function(data, cb)
     cb({})
     SetNuiFocus(false, false)
     QBCore.Functions.Notify('Invoice Submitted!', 'success', 5000)
-    TriggerServerEvent('cd_invoicesystem:createinvoice', data.playerid, data.title, data.amount, InvoiceNumber)
+    TriggerServerEvent('cd_invoicesystem:createinvoice', playerid, data.title, data.amount, InvoiceNumber)
 end)
 
 -- Targeting -- 
@@ -47,7 +67,7 @@ exports['qb-target']:AddGlobalPlayer({
 
 
 -- Invoice Menu --
-RegisterCommand("menu", function()
+RegisterCommand("invoicemenu", function()
     local invoiceList = {}
     invoices = nil
     QBCore.Functions.TriggerCallback('cd_invoicesystem:getinvoice',function(returnValue)
@@ -81,7 +101,7 @@ RegisterCommand("menu", function()
     exports['qb-menu']:openMenu(invoiceList)
 end)
 
-RegisterKeyMapping("menu", "Open the Invoice Menu", "keyboard", "F6")
+RegisterKeyMapping("invoicemenu", "Open the Invoice Menu", "keyboard", "F6")
 
 -- Events -- 
 RegisterNetEvent('cd_invoicesystem:client:payinvoice', function(data)
