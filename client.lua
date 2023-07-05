@@ -10,6 +10,7 @@ CreateThread(function()
     end
 end)
 
+<<<<<<< Updated upstream
 -- Functions -- 
 function GetNearPed()
 	local plyPed = GetPlayerPed(PlayerPedId())
@@ -28,13 +29,21 @@ function GetPedID()
         id = playerid
     })
 end
+=======
+-- Get Nearest Ped ID -- 
+local nearestplayer, distance = QBCore.Functions.GetClosestPlayer()
+if nearestplayer ~= 1 and distance < 5.0 then 
+    nearestplayerid = GetPlayerServerId(nearestplayer)
+end 
+>>>>>>> Stashed changes
 
 
 -- NUI Events -- 
 RegisterNetEvent('openinvoice')
 AddEventHandler('openinvoice', function()
     SendNUIMessage({
-        type = "createinvoice"
+        type = "createinvoice",
+        nearestplayer = nearestplayerid
     })
     SetNuiFocus(true, true)
 end)
