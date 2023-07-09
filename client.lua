@@ -3,21 +3,33 @@ local QBCore = exports['qb-core']:GetCoreObject();
 
 CreateThread(function()
     while true do 
-    Wait(100)
-    local RandNum = math.random(0, 5000) * 5
-    local RandLetter = string.char(math.random(65, 65 + 25))
-    InvoiceNumber = RandLetter..RandNum
+        Wait(100)
+        local RandNum = math.random(0, 5000) * 5
+        local RandLetter = string.char(math.random(65, 65 + 25))
+        InvoiceNumber = RandLetter..RandNum
     end
 end)
 
 -- NUI Events -- 
 RegisterNetEvent('openinvoice')
 AddEventHandler('openinvoice', function()
+    local ped = GetPedInFront()
     SendNUIMessage({
-        type = "createinvoice"
+        type = "createinvoice",
+         pID = player
     })
     SetNuiFocus(true, true)
 end)
+
+function GetPedInFront()
+	local player = PlayerId()
+	local plyPed = GetPlayerPed(player)
+	local plyPos = GetEntityCoords(plyPed, false)
+	local plyOffset = GetOffsetFromEntityInWorldCoords(plyPed, 0.0, 1.3, 0.0)
+	local rayHandle = StartShapeTestCapsule(plyPos.x, plyPos.y, plyPos.z, plyOffset.x, plyOffset.y, plyOffset.z, 1.0, 12, plyPed, 7)
+	local _, _, _, _, ped = GetShapeTestResult(rayHandle)
+	return ped
+end
 
 RegisterNuiCallback('closeui', function(_, cb)
     cb({})
@@ -47,7 +59,7 @@ exports['qb-target']:AddGlobalPlayer({
 
 
 -- Invoice Menu --
-RegisterCommand("menu", function()
+RegisterCommand("invoicemenu", function()
     local invoiceList = {}
     invoices = nil
     QBCore.Functions.TriggerCallback('cd_invoicesystem:getinvoice',function(returnValue)
